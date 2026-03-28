@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  EVANGELISTE
+}
+
+enum StatutProgramme {
+  a_venir
+  en_cours
+  termine
+}
+
+// ─────────────────────────────────────────
+// ORGANIZATION — L'Église / Cellule locale
+// ─────────────────────────────────────────
+
+model Organization {
+  id          String       @id @default(cuid())
+  nom         String
+  ville       String
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime     @default(now())
+
+  // Préférences de notifications (JSON): { salut, guerison, contact, priereSpontanee, toutesRencontres }
+  notifPrefs  Json?
+
+  // Invitation par QR Code
+  qrInviteToken  String?   @unique
+  qrInviteExpiry DateTime?
+
+  users        User[]
+  programmes   Programme[]
+  rencontres   Rencontre[]
+}
+
+// ─────────────────────────────────────────
+// USER — Membres (Admin ou Évangéliste)
+// ─────────────────────────────────────────
+
+model User {
+  id                String    @id @default(cuid())
+  nom               String
+  email             String    @unique
+  password          String
+  role              Role      @default(EVANGELISTE)
+  actif             Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+
+  invitationToken   String?   @unique
+  invitationExpiry  DateTime?
+  resetToken        String?   @unique
+  resetExpiry       DateTime?
+  notifVuAt         DateTime? // Dernière fois que l'évangéliste a ouvert ses notifications
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  rencontres     Rencontre[]  @relation("EvangelisteRencontres")
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+// ─────────────────────────────────────────
+// PROGRAMME — Les sorties d'évangélisation
+// ─────────────────────────────────────────
+
+model Programme {
+  id                 String          @id @default(cuid())
+  titre              String
+  lieu               String
+  date               DateTime
+  dateFin            DateTime?       // Heure de fin — si passée → statut termine automatiquement
+  statut             StatutProgramme @default(a_venir)
+  repartitionGroupes Json            // { groupes: [{ numero: 1, membres: ["id1", "id2"] }] }
+  createdAt          DateTime        @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  rencontres     Rencontre[]
+
+  @@index([organizationId])
+  @@index([statut])
+}
+
+// ─────────────────────────────────────────
+// RENCONTRE — Formulaire terrain (cœur des stats)
+// ─────────────────────────────────────────
+
+model Rencontre {
+  id               String   @id @default(cuid())
+  personneNom      String
+  personneVille    String
+  latitude         Float?
+  longitude        Float?
+  religion         String
+  priereSpontanee  Boolean  @default(false)
+  priereSalut      Boolean  @default(false)
+  guerison         Boolean  @default(false)
+  besoinEglise     Boolean  @default(false)
+  contact          String?
+  suivi            Boolean  @default(false)
+  // Noms des évangélistes du groupe (si programme en cours)
+  groupeEquipe     String[] @default([])
+  createdAt        DateTime @default(now())
+
+  evangelisteId  String
+  evangeliste    User         @relation("EvangelisteRencontres", fields: [evangelisteId], references: [id])
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  programmeId    String?
+  programme      Programme?   @relation(fields: [programmeId], references: [id])
+
+  @@index([organizationId])
+  @@index([evangelisteId])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([programmeId])
+}

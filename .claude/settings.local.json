@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/chris/Desktop/nextjs-admin-dashboard/src/components/Layouts/sidebar/**)",
+      "Read(//c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/**)",
+      "Bash(ls \"c:/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\(home\\)/\")",
+      "Bash(ls -la \"c:\\\\Users\\\\chris\\\\Desktop\\\\nextjs-admin-dashboard\\\\src\\\\app\\\\\\(home\\)\\\\_components\"\")",
+      "Bash(ls -la \"/c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\(home\\)/_components/\")",
+      "Bash(npm install:*)",
+      "Read(//c/Users/chris/Desktop/nextjs-admin-dashboard/src/**)",
+      "Bash(ls -la /c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\\\\\(dashboard\\\\\\)/)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\chris\\Desktop\\nextjs-admin-dashboard\\src\\app\\(dashboard)\\programmes\\[id]"
+    ]
+  }
+}
