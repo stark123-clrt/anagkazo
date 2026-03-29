@@ -10,12 +10,16 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | FIJ Save Souls",
-    default: "FIJ Save Souls",
+    template: "%s | Anagkazo Save Souls",
+    default: "Anagkazo Save Souls",
   },
   description:
     "Tableau de bord d'évangélisation — suivi des sorties, âmes touchées, saluts et guérisons.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/icons/icon-192.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
