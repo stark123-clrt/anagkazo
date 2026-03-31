@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -64,6 +65,14 @@ export function Sidebar({ role }: { role?: string }) {
       >
         <div className="flex h-full flex-col py-10 pl-[25px] pr-[7px]">
           <div className="relative pr-4.5">
+            <Link
+              href="/dashboard"
+              onClick={() => isMobile && toggleSidebar()}
+              className="px-0 py-2.5 min-[850px]:py-0"
+            >
+              <Logo />
+            </Link>
+
             {isMobile && (
               <button
                 onClick={toggleSidebar}
@@ -164,21 +173,37 @@ export function Sidebar({ role }: { role?: string }) {
               </div>
             ))}
             {role === "SUPER_ADMIN" && (
-              <ul className="space-y-2">
-                <li>
-                  <MenuItem
-                    className="flex items-center gap-3 py-3"
-                    as="link"
-                    href="/super-admin/invitations"
-                    isActive={pathname === "/super-admin/invitations"}
-                  >
-                    <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M15 5H9a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2zM9 9h6M9 13h4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-                    </svg>
-                    <span>Invitations</span>
-                  </MenuItem>
-                </li>
-              </ul>
+              <div className="mb-6">
+                <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">SUPER ADMIN</h2>
+                <ul className="space-y-2">
+                  <li>
+                    <MenuItem
+                      className="flex items-center gap-3 py-3"
+                      as="link"
+                      href="/super-admin/cellule"
+                      isActive={pathname === "/super-admin/cellule"}
+                    >
+                      <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span>Cellule</span>
+                    </MenuItem>
+                  </li>
+                  <li>
+                    <MenuItem
+                      className="flex items-center gap-3 py-3"
+                      as="link"
+                      href="/super-admin/invitations"
+                      isActive={pathname === "/super-admin/invitations"}
+                    >
+                      <svg className="size-6 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M15 5H9a2 2 0 00-2 2v10a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2zM9 9h6M9 13h4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+                      </svg>
+                      <span>Invitations</span>
+                    </MenuItem>
+                  </li>
+                </ul>
+              </div>
             )}
           </div>
         </div>

@@ -8,6 +8,7 @@ export type VilleData = {
   ames: number;
   saluts: number;
   guerisons: number;
+  isCurrent?: boolean;
 };
 
 const COORDS_FR: Record<string, [number, number]> = {
@@ -48,33 +49,28 @@ export async function RegionLabels() {
 
   let villes: VilleData[] = [];
 
-  if (orgId) {
-    const [rencontres, org] = await Promise.all([
-      prisma.rencontre.findMany({
-        where: { organizationId: orgId },
-        select: { personneVille: true, latitude: true, longitude: true, priereSalut: true, guerison: true },
-      }),
-      prisma.organization.findUnique({
-        where: { id: orgId },
-        select: { ville: true, latitude: true, longitude: true },
-      }),
-    ]);
+  // Charger toutes les organisations
+  const orgs = await prisma.organization.findMany({
+    select: {
+      id: true,
+      ville: true,
+      latitude: true,
+      longitude: true,
+      _count: { select: { rencontres: true } },
+      rencontres: { select: { priereSalut: true, guerison: true } },
+    },
+  });
 
-    // Un seul point sur la carte = la ville de la cellule
-    // Toutes les rencontres (peu importe où habite l'âme) sont comptées ici
-    const ames = rencontres.length;
-    const saluts = rencontres.filter((r) => r.priereSalut).length;
-    const guerisons = rencontres.filter((r) => r.guerison).length;
-
-    if (org) {
-      villes.push({
-        nom: org.ville,
-        coords: [org.longitude, org.latitude],
-        ames,
-        saluts,
-        guerisons,
-      });
-    }
+  for (const org of orgs) {
+    if (!org.latitude || !org.longitude) continue;
+    villes.push({
+      nom: org.ville,
+      coords: [org.longitude, org.latitude],
+      ames: org._count.rencontres,
+      saluts: org.rencontres.filter((r: { priereSalut: boolean }) => r.priereSalut).length,
+      guerisons: org.rencontres.filter((r: { guerison: boolean }) => r.guerison).length,
+      isCurrent: org.id === orgId,
+    });
   }
 
   return (

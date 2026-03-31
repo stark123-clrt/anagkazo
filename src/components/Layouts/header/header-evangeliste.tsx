@@ -34,13 +34,7 @@ export function HeaderEvangeliste() {
         </Link>
       )}
 
-      <div className="max-xl:hidden">
-        <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
-          Anagkazo
-        </h1>
-      </div>
-
-      <div className="flex flex-1 items-center justify-end gap-2 min-[375px]:gap-4">
+<div className="flex flex-1 items-center justify-end gap-2 min-[375px]:gap-4">
         <div className="relative w-full max-w-[300px]">
           <input
             type="search"

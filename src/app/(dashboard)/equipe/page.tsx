@@ -71,10 +71,16 @@ export default async function EquipePage() {
     };
   });
 
+  const isSuperAdmin = session.user.role === "SUPER_ADMIN";
+
   return (
     <>
       <Breadcrumb pageName="Gestion de l'Équipe" />
-      <EquipeClient membres={membresAvecStats} isAdmin={isAdmin} isSuperAdmin={session.user.role === "SUPER_ADMIN"} />
+      <EquipeClient
+        membres={membresAvecStats}
+        isAdmin={isAdmin}
+        isSuperAdmin={isSuperAdmin}
+      />
     </>
   );
 }

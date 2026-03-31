@@ -19,11 +19,13 @@ interface VilleData {
   ames: number;
   saluts: number;
   guerisons: number;
+  isCurrent?: boolean;
 }
 
 interface TooltipData extends VilleData {
   x: number;
   y: number;
+  isCurrent?: boolean;
 }
 
 // Rayon du cercle : min 6, max 22 (proportionnel aux âmes)
@@ -69,6 +71,8 @@ export function FranceChoropleth({ villes }: { villes: VilleData[] }) {
           {/* Marqueurs villes */}
           {villes.map((ville) => {
             const r = getRadius(ville.ames, maxAmes);
+            const color = ville.isCurrent ? "#F5A623" : "#3C50E0";
+            const stroke = ville.isCurrent ? "#FFD580" : "#7B96FF";
             return (
               <Marker
                 key={ville.nom}
@@ -79,6 +83,7 @@ export function FranceChoropleth({ villes }: { villes: VilleData[] }) {
                     ames: ville.ames,
                     saluts: ville.saluts,
                     guerisons: ville.guerisons,
+                    isCurrent: ville.isCurrent,
                     x: evt.clientX,
                     y: evt.clientY,
                   });
@@ -90,13 +95,13 @@ export function FranceChoropleth({ villes }: { villes: VilleData[] }) {
                 }}
                 onMouseLeave={() => setTooltip(null)}
               >
-                {/* Halo pulsant */}
-                <circle r={r + 6} fill="#3C50E0" opacity={0.18} />
+                {/* Halo */}
+                <circle r={r + 6} fill={color} opacity={0.18} />
                 {/* Cercle principal */}
                 <circle
                   r={r}
-                  fill="#3C50E0"
-                  stroke="#7B96FF"
+                  fill={color}
+                  stroke={stroke}
                   strokeWidth={1.5}
                   opacity={0.9}
                   style={{ cursor: "pointer" }}
@@ -148,8 +153,9 @@ function TooltipCard({ tooltip }: { tooltip: TooltipData }) {
       }}
     >
       <div className="mb-2 flex items-center gap-2">
-        <span className="size-2.5 rounded-full bg-primary" />
+        <span className="size-2.5 rounded-full" style={{ backgroundColor: tooltip.isCurrent ? "#F5A623" : "#3C50E0" }} />
         <p className="font-bold text-dark dark:text-white">{tooltip.nom}</p>
+        {tooltip.isCurrent && <span className="rounded-full bg-[#F5A623]/15 px-2 py-0.5 text-[10px] font-bold text-[#F5A623]">Ma cellule</span>}
       </div>
       <div className="space-y-1 text-xs">
         <div className="flex justify-between gap-6">

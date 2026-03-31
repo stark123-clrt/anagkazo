@@ -67,8 +67,8 @@ export default function InscriptionPage() {
     setSuggestions([]);
     setShowSuggestions(false);
     setOrgExistante(null);
-    if (!form.groupe || form.groupe.startsWith("Église ")) {
-      setForm((prev) => ({ ...prev, groupe: `Église ${v.nom}` }));
+    if (!form.groupe || form.groupe.startsWith("FIJ ")) {
+      setForm((prev) => ({ ...prev, groupe: `FIJ ${v.nom}` }));
     }
     verifierOrgExistante(v.nom).then((res) => {
       if (res.existe) setOrgExistante({ nom: res.nom!, nbAdmins: res.nbAdmins! });
@@ -323,11 +323,11 @@ export default function InscriptionPage() {
 
               <div>
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Nom du groupe
+                  Nom du groupe / FIJ
                 </label>
                 <input
                   type="text"
-                  placeholder="ex : Église Paris Centre"
+                  placeholder="ex : FIJ Paris Centre"
                   value={form.groupe}
                   onChange={(e) => setForm({ ...form, groupe: e.target.value })}
                   onKeyDown={(e) => e.key === "Enter" && etapeValide[1] && suivant()}
