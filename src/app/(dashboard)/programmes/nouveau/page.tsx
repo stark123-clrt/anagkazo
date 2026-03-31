@@ -8,7 +8,7 @@ export default async function NouveauProgrammePage() {
   const session = await auth();
 
   // Seuls les admins accèdent à cette page
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) {
     redirect("/");
   }
 

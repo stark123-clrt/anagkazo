@@ -13,12 +13,25 @@ datasource db {
 enum Role {
   ADMIN
   EVANGELISTE
+  SUPER_ADMIN
 }
 
 enum StatutProgramme {
   a_venir
   en_cours
   termine
+}
+
+// ─────────────────────────────────────────
+// INVITATION ADMIN — Codes d'accès générés par SUPER_ADMIN
+// ─────────────────────────────────────────
+
+model InvitationAdmin {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  usedAt    DateTime?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
 }
 
 // ─────────────────────────────────────────

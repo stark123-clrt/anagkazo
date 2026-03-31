@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { registerAdmin } from "@/actions/auth.actions";
+import { registerAdmin, verifierOrgExistante } from "@/actions/auth.actions";
+import { validerCodeAdmin, consommerCodeAdmin } from "@/actions/invitation-admin.actions";
 
 interface VilleSuggestion {
   nom: string;
@@ -17,7 +18,7 @@ interface VilleSuggestion {
 const inputClass =
   "w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-primary focus:bg-white/8";
 
-const ETAPES = ["Identité", "Cellule", "Accès"];
+const ETAPES = ["Identité", "Groupe", "Accès"];
 
 export default function InscriptionPage() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function InscriptionPage() {
     groupe: "",
     email: "",
     motdepasse: "",
+    codeAdmin: "",
   });
   const [ville, setVille] = useState("");
   const [villeData, setVilleData] = useState<VilleSuggestion | null>(null);
@@ -37,6 +39,7 @@ export default function InscriptionPage() {
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState("");
   const [success, setSuccess] = useState(false);
+  const [orgExistante, setOrgExistante] = useState<{ nom: string; nbAdmins: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Autocomplétion ville
@@ -63,9 +66,13 @@ export default function InscriptionPage() {
     setVilleData(v);
     setSuggestions([]);
     setShowSuggestions(false);
-    if (!form.groupe || form.groupe.startsWith("FIJ ")) {
-      setForm((prev) => ({ ...prev, groupe: `FIJ ${v.nom}` }));
+    setOrgExistante(null);
+    if (!form.groupe || form.groupe.startsWith("Église ")) {
+      setForm((prev) => ({ ...prev, groupe: `Église ${v.nom}` }));
     }
+    verifierOrgExistante(v.nom).then((res) => {
+      if (res.existe) setOrgExistante({ nom: res.nom!, nbAdmins: res.nbAdmins! });
+    });
   }
 
   function suivant() {
@@ -82,6 +89,20 @@ export default function InscriptionPage() {
     setLoading(true);
     setErreur("");
 
+    // Code admin obligatoire
+    if (!form.codeAdmin.trim()) {
+      setErreur("Un code d'invitation est requis pour créer un espace admin.");
+      setLoading(false);
+      return;
+    }
+
+    const validation = await validerCodeAdmin(form.codeAdmin.trim().toUpperCase());
+    if (!validation.valide) {
+      setErreur(validation.error ?? "Code invalide.");
+      setLoading(false);
+      return;
+    }
+
     const result = await registerAdmin({
       nom: form.nom,
       email: form.email,
@@ -90,6 +111,7 @@ export default function InscriptionPage() {
       ville: villeData.nom,
       latitude: villeData.centre.coordinates[1],
       longitude: villeData.centre.coordinates[0],
+      codeAdmin: form.codeAdmin.trim().toUpperCase(),
     });
 
     setLoading(false);
@@ -98,6 +120,8 @@ export default function InscriptionPage() {
       setErreur(result.error ?? "Une erreur est survenue.");
       return;
     }
+
+    await consommerCodeAdmin(form.codeAdmin.trim().toUpperCase());
 
     setSuccess(true);
     // Redirection vers connexion après 2s
@@ -113,7 +137,7 @@ export default function InscriptionPage() {
   const etapeValide = [
     form.nom.trim().length >= 2,
     !!villeData && form.groupe.trim().length >= 2,
-    form.email.includes("@") && form.motdepasse.length >= 6,
+    form.email.includes("@") && form.motdepasse.length >= 6 && form.codeAdmin.trim().length >= 4,
   ];
 
   // ===== ÉCRAN SUCCÈS =====
@@ -146,7 +170,7 @@ export default function InscriptionPage() {
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#020D1A]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Link href="/accueil">
-            <Image src={logoBlanc} height={44} alt="FIJ Save Souls" style={{ objectFit: "contain" }} priority />
+            <Image src={logoBlanc} height={44} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/connexion" className="rounded-lg px-4 py-2 text-sm font-semibold text-white/70 transition hover:text-white">
@@ -231,10 +255,10 @@ export default function InscriptionPage() {
           {etape === 1 && (
             <div>
               <h1 className="mb-1 text-xl font-extrabold text-white">
-                Vous êtes responsable de quelle cellule ?
+                Vous êtes responsable de quel groupe ?
               </h1>
               <p className="mb-7 text-sm text-white/40">
-                Recherchez votre ville — le nom de votre FIJ se complétera automatiquement.
+                Recherchez votre ville — le nom de votre groupe se complétera automatiquement.
               </p>
 
               <div className="relative mb-4">
@@ -287,15 +311,23 @@ export default function InscriptionPage() {
                     )}
                   </div>
                 )}
+                {orgExistante && (
+                  <div className="mt-2 rounded-lg border border-[#FF9C55]/30 bg-[#FF9C55]/10 px-3 py-2.5 text-xs text-[#FF9C55]">
+                    <p className="font-bold">Un espace existe déjà pour cette ville</p>
+                    <p className="mt-0.5 text-[#FF9C55]/80">
+                      {orgExistante.nom} · {orgExistante.nbAdmins}/3 admin{orgExistante.nbAdmins > 1 ? "s" : ""} — vous allez le rejoindre comme co-admin.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div>
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Nom du groupe / FIJ / Cellule
+                  Nom du groupe
                 </label>
                 <input
                   type="text"
-                  placeholder="ex : FIJ Paris Centre"
+                  placeholder="ex : Église Paris Centre"
                   value={form.groupe}
                   onChange={(e) => setForm({ ...form, groupe: e.target.value })}
                   onKeyDown={(e) => e.key === "Enter" && etapeValide[1] && suivant()}
@@ -362,6 +394,19 @@ export default function InscriptionPage() {
                       <p className={`mt-1 text-xs font-medium ${forceTxtCouleur}`}>{forceLabel}</p>
                     </div>
                   )}
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-white/40">
+                    Code d&apos;invitation <span className="text-red">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="ex : A3F9C2"
+                    value={form.codeAdmin}
+                    onChange={(e) => { setForm({ ...form, codeAdmin: e.target.value }); setErreur(""); }}
+                    className={inputClass}
+                  />
                 </div>
               </div>
             </div>

@@ -13,7 +13,7 @@ export async function genererQRToken(): Promise<{
   expiresAt: number; // timestamp ms
 }> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") throw new Error("Accès refusé");
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) throw new Error("Accès refusé");
 
   const token = randomUUID();
   const expiry = new Date(Date.now() + 35_000); // 35 secondes
@@ -119,7 +119,7 @@ export async function inscrireViaQR(
       <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="background:#020D1A;padding:32px 40px;text-align:center;">
-            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">FIJ Save Souls</p>
+            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Anagkazo</p>
             <h1 style="margin:10px 0 0;color:#ffffff;font-size:20px;font-weight:700;">Invitation à rejoindre l'équipe</h1>
           </td>
         </tr>
@@ -127,7 +127,7 @@ export async function inscrireViaQR(
           <td style="padding:36px 40px;">
             <p style="margin:0 0 16px;color:#1a1a2e;font-size:15px;">Bonjour <strong>${nom.trim()}</strong>,</p>
             <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
-              Vous avez rejoint l'équipe <strong>${org?.nom}</strong> sur FIJ Save Souls.
+              Vous avez rejoint l'équipe <strong>${org?.nom}</strong> sur Anagkazo.
               Cliquez sur le bouton ci-dessous pour créer votre mot de passe.
             </p>
             <table width="100%" cellpadding="0" cellspacing="0">
@@ -139,7 +139,7 @@ export async function inscrireViaQR(
                 </td>
               </tr>
             </table>
-            <p style="color:#888;font-size:12px;">Ce lien expire dans 48h. FIJ — Fraternité Internationale de Jésus</p>
+            <p style="color:#888;font-size:12px;">Ce lien expire dans 48h.</p>
           </td>
         </tr>
       </table>

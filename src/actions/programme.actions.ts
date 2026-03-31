@@ -61,7 +61,7 @@ export async function modifierProgramme(
   data: CreerProgrammeData & { statut: string },
 ): Promise<{ error?: string }> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) {
     return { error: "Accès refusé." };
   }
 
@@ -96,7 +96,7 @@ export async function modifierProgramme(
 
 export async function supprimerProgramme(id: string): Promise<{ error?: string }> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) {
     return { error: "Accès refusé." };
   }
 
@@ -119,7 +119,7 @@ export async function creerProgramme(data: CreerProgrammeData): Promise<{ error?
   if (!session?.user?.id) {
     return { error: "Non autorisé. Veuillez vous reconnecter." };
   }
-  if (session.user.role !== "ADMIN") {
+  if (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN") {
     return { error: "Accès refusé. Réservé aux administrateurs." };
   }
 

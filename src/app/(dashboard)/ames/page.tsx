@@ -119,7 +119,7 @@ export default async function AmesPage({ searchParams }: { searchParams: SearchP
         religions={religions}
         evangelistes={evangelistes}
         groupesFiltres={groupesFiltres}
-        isAdmin={session.user.role === "ADMIN"}
+        isAdmin={session.user.role === "ADMIN" || session.user.role === "SUPER_ADMIN"}
         stats={{
           total: totalAmes,
           saluts: totalSaluts,

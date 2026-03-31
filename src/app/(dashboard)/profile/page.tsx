@@ -46,7 +46,7 @@ export default async function ProfilePage() {
           <div className="mb-4 text-center">
             <h2 className="text-xl font-bold text-dark dark:text-white">{user.nom}</h2>
             <p className="text-sm font-medium text-primary">
-              {user.role === "ADMIN" ? "Administrateur" : "Évangéliste"}
+              {user.role === "SUPER_ADMIN" ? "Super Admin" : user.role === "ADMIN" ? "Administrateur" : "Évangéliste"}
             </p>
             {org && (
               <p className="mt-0.5 text-sm text-dark-5 dark:text-dark-6">

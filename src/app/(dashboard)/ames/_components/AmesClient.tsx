@@ -410,8 +410,8 @@ export default function AmesClient({
 <body>
   <div class="header">
     <div>
-      <h1>FIJ — Annuaire des Âmes</h1>
-      <div class="sub">Fraternité Internationale de Jésus</div>
+      <h1>Annuaire des Âmes</h1>
+      <div class="sub">Anagkazo</div>
     </div>
     <div class="date">Généré le ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</div>
   </div>
@@ -433,7 +433,7 @@ export default function AmesClient({
     </thead>
     <tbody>${lignes}</tbody>
   </table>
-  <div class="footer">FIJ — Rapport généré automatiquement · ${amesFiltrees.length} âme${amesFiltrees.length !== 1 ? "s" : ""}</div>
+  <div class="footer">Rapport généré automatiquement · ${amesFiltrees.length} âme${amesFiltrees.length !== 1 ? "s" : ""}</div>
 </body>
 </html>`;
 

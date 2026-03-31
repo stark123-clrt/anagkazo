@@ -29,7 +29,7 @@ export default function MotDePasseOubliePage() {
         {/* Logo */}
         <div className="mb-8 flex justify-center">
           <Link href="/accueil">
-            <Image src={logoBlanc} height={52} alt="FIJ Save Souls" style={{ objectFit: "contain" }} priority />
+            <Image src={logoBlanc} height={52} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
           </Link>
         </div>
 
@@ -99,7 +99,7 @@ export default function MotDePasseOubliePage() {
         )}
 
         <p className="mt-6 text-center text-sm text-white/30">
-          FIJ Save Souls — Plateforme d&apos;évangélisation
+          Anagkazo — Plateforme d&apos;évangélisation
         </p>
       </div>
     </div>

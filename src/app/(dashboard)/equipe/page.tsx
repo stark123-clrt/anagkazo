@@ -10,7 +10,7 @@ export default async function EquipePage() {
 
   if (!session?.user?.id) redirect("/connexion");
 
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = session.user.role === "ADMIN" || session.user.role === "SUPER_ADMIN";
   const orgId = session.user.organizationId;
 
   const membres = await prisma.user.findMany({
@@ -74,7 +74,7 @@ export default async function EquipePage() {
   return (
     <>
       <Breadcrumb pageName="Gestion de l'Équipe" />
-      <EquipeClient membres={membresAvecStats} isAdmin={isAdmin} />
+      <EquipeClient membres={membresAvecStats} isAdmin={isAdmin} isSuperAdmin={session.user.role === "SUPER_ADMIN"} />
     </>
   );
 }

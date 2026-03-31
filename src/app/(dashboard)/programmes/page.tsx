@@ -11,7 +11,7 @@ export default async function ProgrammesPage() {
   if (!session?.user?.id) redirect("/connexion");
 
   const orgId = session.user.organizationId;
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = session.user.role === "ADMIN" || session.user.role === "SUPER_ADMIN";
 
   // Sync automatique des statuts selon l'heure actuelle
   await syncStatutsProgrammes(orgId);

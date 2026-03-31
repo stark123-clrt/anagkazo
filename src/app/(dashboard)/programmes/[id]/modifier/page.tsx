@@ -10,7 +10,7 @@ export default async function ModifierProgrammePage({
   params: { id: string };
 }) {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") redirect("/programmes");
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) redirect("/programmes");
 
   const orgId = session.user.organizationId;
 

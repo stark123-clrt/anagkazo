@@ -1,6 +1,6 @@
 "use client";
 
-import { ajouterEvangeliste, suspendreEvangeliste, reactiverEvangeliste, supprimerEvangeliste } from "@/actions/equipe.actions";
+import { ajouterEvangeliste, suspendreEvangeliste, reactiverEvangeliste, supprimerEvangeliste, supprimerAdmin } from "@/actions/equipe.actions";
 import { genererQRToken } from "@/actions/qr-invite.actions";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useTransition, useEffect, useRef } from "react";
@@ -37,12 +37,12 @@ function Initiales({ nom, isAdmin }: { nom: string; isAdmin: boolean }) {
 }
 
 function BadgeRole({ role }: { role: string }) {
-  const isAdmin = role === "ADMIN";
+  const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN";
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
       isAdmin ? "bg-primary/15 text-primary" : "bg-green/15 text-green"
     }`}>
-      {isAdmin ? "Admin" : "Évangéliste"}
+      {role === "SUPER_ADMIN" ? "Super Admin" : isAdmin ? "Admin" : "Évangéliste"}
     </span>
   );
 }
@@ -50,9 +50,11 @@ function BadgeRole({ role }: { role: string }) {
 export default function EquipeClient({
   membres,
   isAdmin,
+  isSuperAdmin,
 }: {
   membres: MembreStats[];
   isAdmin: boolean;
+  isSuperAdmin: boolean;
 }) {
   const [showModal, setShowModal] = useState(false);
   const [nom, setNom] = useState("");
@@ -81,7 +83,7 @@ export default function EquipeClient({
       let result;
       if (actionMembre.type === "suspendre") result = await suspendreEvangeliste(actionMembre.membre.id);
       else if (actionMembre.type === "reactiver") result = await reactiverEvangeliste(actionMembre.membre.id);
-      else result = await supprimerEvangeliste(actionMembre.membre.id);
+      else result = await (actionMembre.membre.role === "ADMIN" ? supprimerAdmin : supprimerEvangeliste)(actionMembre.membre.id);
 
       if (result.success) {
         setActionMembre(null);
@@ -247,7 +249,7 @@ export default function EquipeClient({
                 </p>
 
                 {/* Actions admin — évangélistes seulement */}
-                {isAdmin && m.role !== "ADMIN" && (
+                {isAdmin && m.role !== "ADMIN" && m.role !== "SUPER_ADMIN" && (
                   <div className="mt-3 flex gap-2 border-t border-stroke pt-3 dark:border-dark-3">
                     {m.actif ? (
                       <button onClick={() => setActionMembre({ type: "suspendre", membre: m })}
@@ -260,6 +262,15 @@ export default function EquipeClient({
                         Réactiver
                       </button>
                     )}
+                    <button onClick={() => setActionMembre({ type: "supprimer", membre: m })}
+                      className="rounded-lg border border-stroke px-3 py-2 text-xs font-semibold text-red transition hover:bg-red/10 dark:border-dark-3">
+                      <svg width={13} height={13} viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
+                )}
+                {/* Supprimer admin — super admin seulement */}
+                {isSuperAdmin && m.role === "ADMIN" && (
+                  <div className="mt-3 flex gap-2 border-t border-stroke pt-3 dark:border-dark-3">
                     <button onClick={() => setActionMembre({ type: "supprimer", membre: m })}
                       className="rounded-lg border border-stroke px-3 py-2 text-xs font-semibold text-red transition hover:bg-red/10 dark:border-dark-3">
                       <svg width={13} height={13} viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -316,7 +327,7 @@ export default function EquipeClient({
                 </div>
 
                 {/* Actions admin */}
-                {isAdmin && m.role !== "ADMIN" && (
+                {isAdmin && m.role !== "ADMIN" && m.role !== "SUPER_ADMIN" && (
                   <div className="flex gap-2 border-t border-stroke px-4 pb-4 pt-3 dark:border-dark-3">
                     {m.actif ? (
                       <button onClick={() => setActionMembre({ type: "suspendre", membre: m })}
@@ -331,6 +342,16 @@ export default function EquipeClient({
                     )}
                     <button onClick={() => setActionMembre({ type: "supprimer", membre: m })}
                       title="Supprimer"
+                      className="rounded-lg border border-stroke px-3 py-2 text-red transition hover:bg-red/10 dark:border-dark-3">
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
+                )}
+                {/* Supprimer admin — super admin seulement */}
+                {isSuperAdmin && m.role === "ADMIN" && (
+                  <div className="flex gap-2 border-t border-stroke px-4 pb-4 pt-3 dark:border-dark-3">
+                    <button onClick={() => setActionMembre({ type: "supprimer", membre: m })}
+                      title="Supprimer l'admin"
                       className="rounded-lg border border-stroke px-3 py-2 text-red transition hover:bg-red/10 dark:border-dark-3">
                       <svg width={14} height={14} viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
                     </button>

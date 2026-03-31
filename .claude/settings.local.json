@@ -8,7 +8,8 @@
       "Bash(ls -la \"/c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\(home\\)/_components/\")",
       "Bash(npm install:*)",
       "Read(//c/Users/chris/Desktop/nextjs-admin-dashboard/src/**)",
-      "Bash(ls -la /c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\\\\\(dashboard\\\\\\)/)"
+      "Bash(ls -la /c/Users/chris/Desktop/nextjs-admin-dashboard/src/app/\\\\\\(dashboard\\\\\\)/)",
+      "Bash(docker exec fij_db psql -U postgres -d evangile -c \":*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\chris\\Desktop\\nextjs-admin-dashboard\\src\\app\\(dashboard)\\programmes\\[id]"

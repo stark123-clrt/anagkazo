@@ -19,6 +19,12 @@ export async function middleware(req: NextRequest) {
     secureCookie: req.nextUrl.protocol === "https:",
   });
 
+  // Racine → landing page si non connecté, dashboard si connecté
+  if (pathname === "/") {
+    if (!token) return NextResponse.redirect(new URL("/accueil", req.nextUrl.origin));
+    return NextResponse.next();
+  }
+
   // Non connecté → redirection vers connexion
   if (!token) {
     const loginUrl = new URL("/connexion", req.nextUrl.origin);
@@ -27,6 +33,11 @@ export async function middleware(req: NextRequest) {
   }
 
   const role = token.role as string | undefined;
+
+  // SUPER_ADMIN uniquement sur /super-admin/*
+  if (pathname.startsWith("/super-admin") && role !== "SUPER_ADMIN") {
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+  }
 
   // Évangéliste sur route admin uniquement → redirigé
   if (
@@ -53,4 +64,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|api/auth|.*\\.png|.*\\.jpg|.*\\.svg).*)",
   ],
 };
-

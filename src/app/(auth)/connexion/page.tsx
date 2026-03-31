@@ -152,7 +152,7 @@ export default function ConnexionPage() {
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#020D1A]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Link href="/accueil">
-            <Image src={logoBlanc} height={44} alt="FIJ Save Souls" style={{ objectFit: "contain" }} priority />
+            <Image src={logoBlanc} height={44} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/connexion" className="rounded-lg px-4 py-2 text-sm font-semibold text-white/70 transition hover:text-white">

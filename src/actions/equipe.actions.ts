@@ -50,7 +50,7 @@ async function envoyerEmailInvitation(opts: {
           <!-- Header -->
           <tr>
             <td style="background:#020D1A;padding:32px 40px;text-align:center;">
-              <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">FIJ Save Souls</p>
+              <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Anagkazo</p>
               <h1 style="margin:10px 0 0;color:#ffffff;font-size:20px;font-weight:700;">Invitation à rejoindre l'équipe</h1>
             </td>
           </tr>
@@ -62,7 +62,7 @@ async function envoyerEmailInvitation(opts: {
 
               <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
                 <strong>${opts.nomAdmin}</strong> vous a invité à rejoindre l'équipe <strong>${opts.nomOrg}</strong>
-                sur la plateforme FIJ Save Souls.
+                sur la plateforme Anagkazo.
               </p>
 
               <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
@@ -104,7 +104,7 @@ async function envoyerEmailInvitation(opts: {
           <tr>
             <td style="border-top:1px solid #eeeef5;padding:20px 40px;text-align:center;">
               <p style="margin:0;color:#9999bb;font-size:11px;line-height:1.6;">
-                Cet email vous a été envoyé par ${opts.nomOrg} via FIJ Save Souls.<br/>
+                Cet email vous a été envoyé par ${opts.nomOrg} via Anagkazo.<br/>
                 Si vous n'attendiez pas cette invitation, ignorez simplement cet email.
               </p>
             </td>
@@ -133,7 +133,7 @@ export async function ajouterEvangeliste(
   if (!session?.user?.id) {
     return { success: false, error: "Non autorisé. Veuillez vous reconnecter." };
   }
-  if (session.user.role !== "ADMIN") {
+  if (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN") {
     return { success: false, error: "Accès refusé. Réservé aux administrateurs." };
   }
 
@@ -199,7 +199,7 @@ export async function ajouterEvangeliste(
 
 export async function suspendreEvangeliste(userId: string): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN")
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN"))
     return { success: false, error: "Accès refusé." };
   if (userId === session.user.id)
     return { success: false, error: "Impossible de se suspendre soi-même." };
@@ -207,7 +207,7 @@ export async function suspendreEvangeliste(userId: string): Promise<ActionResult
   const cible = await prisma.user.findUnique({ where: { id: userId }, select: { organizationId: true, role: true } });
   if (!cible || cible.organizationId !== session.user.organizationId)
     return { success: false, error: "Utilisateur introuvable." };
-  if (cible.role === "ADMIN")
+  if (cible.role === "ADMIN" || cible.role === "SUPER_ADMIN")
     return { success: false, error: "Impossible de suspendre un admin." };
 
   await prisma.user.update({ where: { id: userId }, data: { actif: false } });
@@ -217,7 +217,7 @@ export async function suspendreEvangeliste(userId: string): Promise<ActionResult
 
 export async function reactiverEvangeliste(userId: string): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN")
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN"))
     return { success: false, error: "Accès refusé." };
 
   const cible = await prisma.user.findUnique({ where: { id: userId }, select: { organizationId: true } });
@@ -229,9 +229,44 @@ export async function reactiverEvangeliste(userId: string): Promise<ActionResult
   return { success: true };
 }
 
+export async function supprimerAdmin(userId: string): Promise<ActionResult> {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== "SUPER_ADMIN")
+    return { success: false, error: "Accès refusé. Réservé au Super Admin." };
+  if (userId === session.user.id)
+    return { success: false, error: "Impossible de se supprimer soi-même." };
+
+  const cible = await prisma.user.findUnique({ where: { id: userId }, select: { organizationId: true, role: true, nom: true } });
+  if (!cible || cible.organizationId !== session.user.organizationId)
+    return { success: false, error: "Utilisateur introuvable." };
+  if (cible.role !== "ADMIN")
+    return { success: false, error: "Cet utilisateur n'est pas un admin." };
+
+  // Réassigner ses rencontres à l'org en les rattachant au SUPER_ADMIN
+  const rencontres = await prisma.rencontre.findMany({
+    where: { evangelisteId: userId },
+    select: { id: true, groupeEquipe: true },
+  });
+
+  for (const r of rencontres) {
+    const equipe = r.groupeEquipe.length > 0 ? r.groupeEquipe : [cible.nom];
+    await prisma.rencontre.update({
+      where: { id: r.id },
+      data: {
+        evangelisteId: session.user.id,
+        groupeEquipe: equipe.includes(cible.nom) ? equipe : [cible.nom, ...equipe],
+      },
+    });
+  }
+
+  await prisma.user.delete({ where: { id: userId } });
+  revalidatePath("/equipe");
+  return { success: true };
+}
+
 export async function supprimerEvangeliste(userId: string): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN")
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN"))
     return { success: false, error: "Accès refusé." };
   if (userId === session.user.id)
     return { success: false, error: "Impossible de se supprimer soi-même." };
@@ -239,7 +274,7 @@ export async function supprimerEvangeliste(userId: string): Promise<ActionResult
   const cible = await prisma.user.findUnique({ where: { id: userId }, select: { organizationId: true, role: true, nom: true } });
   if (!cible || cible.organizationId !== session.user.organizationId)
     return { success: false, error: "Utilisateur introuvable." };
-  if (cible.role === "ADMIN")
+  if (cible.role === "ADMIN" || cible.role === "SUPER_ADMIN")
     return { success: false, error: "Impossible de supprimer un admin." };
 
   // Réassigner ses rencontres à l'admin avant suppression

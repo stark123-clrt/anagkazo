@@ -51,7 +51,7 @@ export default function RejoindreClient({ token, orgNom }: { token: string; orgN
 
         {/* Header */}
         <div className="rounded-t-2xl bg-[#020D1A] px-8 py-7 text-center">
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-[2px] text-primary">FIJ Save Souls</p>
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-[2px] text-primary">Anagkazo</p>
           <h1 className="text-xl font-bold text-white">Rejoindre l'équipe</h1>
           <p className="mt-1 text-sm text-white/60">{orgNom}</p>
         </div>

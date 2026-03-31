@@ -7,7 +7,7 @@ import NotifPrefsClient from "./_components/NotifPrefsClient";
 
 export default async function ParametresNotificationsPage() {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") redirect("/programmes");
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) redirect("/programmes");
 
   const prefs = await getNotifPrefs();
 

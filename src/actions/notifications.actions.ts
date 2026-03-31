@@ -95,7 +95,7 @@ export async function getNotifPrefs(): Promise<NotifPrefs> {
 
 export async function sauvegarderNotifPrefs(prefs: NotifPrefs): Promise<{ error?: string }> {
   const session = await auth();
-  if (!session?.user?.id || session.user.role !== "ADMIN") return { error: "Accès refusé." };
+  if (!session?.user?.id || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN")) return { error: "Accès refusé." };
 
   await prisma.organization.update({
     where: { id: session.user.organizationId },
