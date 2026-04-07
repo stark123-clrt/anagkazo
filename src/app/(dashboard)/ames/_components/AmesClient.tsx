@@ -25,6 +25,7 @@ interface Ame {
 interface Stats { total: number; saluts: number; guerisons: number; aRecontacter: number; }
 interface Evangeliste { id: string; nom: string; }
 interface GroupeFiltre { id: string; label: string; membres: string[]; }
+interface ProgrammeFiltre { id: string; titre: string; date: string; }
 
 const RELIGION_BADGE: Record<string, string> = {
   "Chrétien(ne)": "bg-green/15 text-green",
@@ -196,12 +197,13 @@ function ModalDetail({ ame, onClose, isAdmin, onSuiviChange, onDelete }: {
 
 // ── Composant principal ───────────────────────────────────────
 export default function AmesClient({
-  ames: amesInitiales, religions, evangelistes, groupesFiltres, stats, isAdmin,
+  ames: amesInitiales, religions, evangelistes, groupesFiltres, programmes = [], stats, isAdmin,
 }: {
   ames: Ame[];
   religions: string[];
   evangelistes: Evangeliste[];
   groupesFiltres: GroupeFiltre[];
+  programmes?: ProgrammeFiltre[];
   stats: Stats;
   isAdmin: boolean;
 }) {
@@ -216,7 +218,8 @@ export default function AmesClient({
   const [filtreSalut, setFiltreSalut] = useState("Tous");
   const [filtreEvangeliste, setFiltreEvangeliste] = useState("Tous");
   const [filtreGroupe, setFiltreGroupe] = useState("Tous");
-  const [filtreSuivi, setFiltreSuivi] = useState("Tous"); // Tous / Suivies / Non suivies
+  const [filtreSuivi, setFiltreSuivi] = useState("Tous");
+  const [filtreProgramme, setFiltreProgramme] = useState("Tous");
   const [showFiltres, setShowFiltres] = useState(false);
 
   // Highlight depuis URL
@@ -249,6 +252,7 @@ export default function AmesClient({
     }
     if (filtreSuivi === "Suivies" && !ame.suivi) return false;
     if (filtreSuivi === "Non suivies" && ame.suivi) return false;
+    if (filtreProgramme !== "Tous" && ame.programmeId !== filtreProgramme) return false;
     return true;
   });
 
@@ -263,16 +267,17 @@ export default function AmesClient({
     filtreEvangeliste !== "Tous",
     filtreGroupe !== "Tous",
     filtreSuivi !== "Tous",
+    filtreProgramme !== "Tous",
   ].filter(Boolean).length;
 
   function resetFiltres() {
     setFiltrePeriode("tout"); setFiltreReligion("Toutes"); setFiltreSalut("Tous");
-    setFiltreEvangeliste("Tous"); setFiltreGroupe("Tous"); setFiltreSuivi("Tous");
+    setFiltreEvangeliste("Tous"); setFiltreGroupe("Tous"); setFiltreSuivi("Tous"); setFiltreProgramme("Tous");
     setPage(1);
   }
 
   // Reset page quand les filtres changent
-  useEffect(() => { setPage(1); }, [q, filtrePeriode, filtreReligion, filtreSalut, filtreEvangeliste, filtreGroupe, filtreSuivi]);
+  useEffect(() => { setPage(1); }, [q, filtrePeriode, filtreReligion, filtreSalut, filtreEvangeliste, filtreGroupe, filtreSuivi, filtreProgramme]);
 
   function handleSuiviChange(id: string, val: boolean) {
     setAmes((prev) => prev.map((a) => a.id === id ? { ...a, suivi: val } : a));
@@ -544,6 +549,25 @@ export default function AmesClient({
                 ))}
               </div>
             </div>
+
+            {/* Programme */}
+            {programmes.length > 0 && (
+              <div>
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-dark-5 dark:text-dark-6">Programme</p>
+                <div className="flex flex-wrap gap-1.5">
+                  <button onClick={() => setFiltreProgramme("Tous")}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${filtreProgramme === "Tous" ? "bg-primary text-white" : "border border-stroke text-dark dark:border-dark-3 dark:text-white"}`}>
+                    Tous
+                  </button>
+                  {programmes.map((p) => (
+                    <button key={p.id} onClick={() => setFiltreProgramme(p.id)}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold transition ${filtreProgramme === p.id ? "bg-primary text-white" : "border border-stroke text-dark dark:border-dark-3 dark:text-white"}`}>
+                      {p.titre} — {p.date}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Groupe d'évangélisation */}
             {groupesFiltres.length > 0 && (

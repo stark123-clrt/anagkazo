@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/Layouts/sidebar";
 import { Header } from "@/components/Layouts/header";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { InstallPWA } from "@/components/InstallPWA";
+import { PushNotifications } from "@/components/PushNotifications";
 import NextTopLoader from "nextjs-toploader";
 import type { PropsWithChildren } from "react";
 import { auth } from "@/lib/auth";
@@ -24,6 +25,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
         </div>
       </div>
       <InstallPWA />
+      <PushNotifications />
     </>
   );
 }

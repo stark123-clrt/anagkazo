@@ -43,8 +43,12 @@ export default async function ProgrammesPage() {
   const programmesData = programmes.map((p) => {
     let groupes: { groupe: number; membres: string[] }[] = [];
     try {
-      const raw = p.repartitionGroupes as { groupes?: { groupe: number; membres: string[] }[] } | null;
-      groupes = raw?.groupes ?? [];
+      const raw = p.repartitionGroupes;
+      if (Array.isArray(raw)) {
+        groupes = raw as { groupe: number; membres: string[] }[];
+      } else if (raw && typeof raw === "object" && "groupes" in (raw as object)) {
+        groupes = (raw as { groupes: { groupe: number; membres: string[] }[] }).groupes ?? [];
+      }
     } catch {
       groupes = [];
     }

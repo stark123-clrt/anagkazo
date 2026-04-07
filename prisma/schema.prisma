@@ -71,19 +71,40 @@ model User {
   actif             Boolean   @default(true)
   createdAt         DateTime  @default(now())
 
-  invitationToken   String?   @unique
-  invitationExpiry  DateTime?
-  resetToken        String?   @unique
-  resetExpiry       DateTime?
+  invitationToken      String?   @unique
+  invitationExpiry     DateTime?
+  resetToken           String?   @unique
+  resetExpiry          DateTime?
+  emailVerifToken      String?   @unique
+  emailVerifExpiry     DateTime?
+  emailVerified        Boolean   @default(false)
   notifVuAt         DateTime? // Dernière fois que l'évangéliste a ouvert ses notifications
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  rencontres     Rencontre[]  @relation("EvangelisteRencontres")
+  rencontres         Rencontre[]        @relation("EvangelisteRencontres")
+  pushSubscriptions  PushSubscription[]
 
   @@index([organizationId])
   @@index([email])
+}
+
+// ─────────────────────────────────────────
+// PUSH SUBSCRIPTION — Notifications push PWA
+// ─────────────────────────────────────────
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // ─────────────────────────────────────────

@@ -124,8 +124,6 @@ export default function InscriptionPage() {
     await consommerCodeAdmin(form.codeAdmin.trim().toUpperCase());
 
     setSuccess(true);
-    // Redirection vers connexion après 2s
-    setTimeout(() => router.push("/connexion"), 2000);
   }
 
   const force = form.motdepasse.length;
@@ -147,17 +145,18 @@ export default function InscriptionPage() {
         <div className="w-full max-w-md text-center">
           <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full border border-primary/30 bg-primary/10">
             <svg width={36} height={36} viewBox="0 0 24 24" fill="none">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#3C50E0" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="#5750F1" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <h2 className="mb-2 text-2xl font-extrabold text-white">Espace créé !</h2>
+          <h2 className="mb-2 text-2xl font-extrabold text-white">Vérifiez votre email !</h2>
           <p className="mb-2 text-sm text-white/50">
-            Bienvenue, <span className="font-semibold text-white">{form.nom}</span>.
+            Un email de confirmation a été envoyé à
           </p>
-          <p className="mb-8 text-sm text-white/40">
-            Votre espace <span className="font-semibold text-primary">{form.groupe}</span> est prêt.
+          <p className="mb-4 text-sm font-semibold text-primary">{form.email}</p>
+          <p className="mb-8 text-sm text-white/40 leading-relaxed">
+            Cliquez sur le lien dans cet email pour activer votre compte et accéder à votre espace <span className="font-semibold text-white/60">{form.groupe}</span>.
           </p>
-          <p className="text-xs text-white/30">Redirection vers la connexion…</p>
+          <p className="text-xs text-white/25">Le lien expire dans 24 heures.</p>
         </div>
       </div>
     );

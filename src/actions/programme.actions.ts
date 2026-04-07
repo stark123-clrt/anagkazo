@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { notifierUser, notifierEvangelistes } from "@/actions/push.actions";
 
 interface Groupe {
   groupe: number;
@@ -48,10 +49,34 @@ export async function syncStatutsProgrammes(orgId: string): Promise<void> {
     }
 
     if (nouveauStatut && nouveauStatut !== p.statut) {
-      await prisma.programme.update({
+      const updated = await prisma.programme.update({
         where: { id: p.id },
         data: { statut: nouveauStatut },
+        select: { titre: true, lieu: true, repartitionGroupes: true, organizationId: true },
       });
+
+      if (nouveauStatut === "en_cours") {
+        // Notifier les évangélistes du programme
+        let groupes: { groupe: number; membres: string[] }[] = [];
+        try {
+          const raw = updated.repartitionGroupes;
+          if (Array.isArray(raw)) groupes = raw as { groupe: number; membres: string[] }[];
+        } catch {}
+        const membres = groupes.flatMap((g) => g.membres);
+        for (const userId of membres) {
+          notifierUser(userId, {
+            title: "🚀 Sortie commencée !",
+            body: `La sortie "${updated.titre}" à ${updated.lieu} vient de commencer !`,
+            url: "/evangeliste/terrain",
+          }).catch(() => {});
+        }
+      } else if (nouveauStatut === "termine") {
+        notifierEvangelistes(orgId, {
+          title: "✅ Sortie terminée",
+          body: `La sortie "${updated.titre}" est maintenant terminée.`,
+          url: "/evangeliste/programmes",
+        }).catch(() => {});
+      }
     }
   }
 }
@@ -156,7 +181,17 @@ export async function creerProgramme(data: CreerProgrammeData): Promise<{ error?
     return { error: "Erreur lors de la création du programme. Veuillez réessayer." };
   }
 
-  // 4. Revalider et rediriger
+  // 4. Notifier les évangélistes ajoutés au programme
+  const membres = data.groupes.flatMap((g) => g.membres);
+  for (const userId of membres) {
+    notifierUser(userId, {
+      title: "📅 Nouvelle sortie !",
+      body: `Tu as été ajouté au programme "${data.titre}" — ${data.lieu}`,
+      url: "/evangeliste/programmes",
+    }).catch(() => {});
+  }
+
+  // 5. Revalider et rediriger
   revalidatePath("/programmes");
   redirect("/programmes");
 }

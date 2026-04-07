@@ -69,13 +69,13 @@ export function FranceChoropleth({ villes }: { villes: VilleData[] }) {
           </Geographies>
 
           {/* Marqueurs villes */}
-          {villes.map((ville) => {
+          {villes.map((ville, index) => {
             const r = getRadius(ville.ames, maxAmes);
             const color = ville.isCurrent ? "#F5A623" : "#3C50E0";
             const stroke = ville.isCurrent ? "#FFD580" : "#7B96FF";
             return (
               <Marker
-                key={ville.nom}
+                key={`${ville.nom}-${index}`}
                 coordinates={ville.coords}
                 onMouseEnter={(evt: React.MouseEvent) => {
                   setTooltip({

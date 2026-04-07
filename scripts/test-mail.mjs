@@ -1,13 +1,12 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: "mail.anagkazo-soul.fr",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
-  tls: { rejectUnauthorized: false },
   auth: {
-    user: "contact@anagkazo-soul.fr",
-    pass: "Anagkazo123soul&",
+    user: "ondiyochristian10@gmail.com",
+    pass: "mtpcjpehemhqnguv",
   },
 });
 

@@ -152,5 +152,13 @@ export async function inscrireViaQR(
     console.error("[QR INVITE] Erreur mail:", e);
   }
 
+  // Notifier les admins
+  const { notifierAdmins } = await import("@/actions/push.actions");
+  notifierAdmins(orgId, {
+    title: "👤 Nouvel évangéliste !",
+    body: `${nom.trim()} vient de rejoindre l'équipe via QR Code`,
+    url: "/equipe",
+  }).catch(() => {});
+
   return { success: true };
 }

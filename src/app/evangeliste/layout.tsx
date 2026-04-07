@@ -3,6 +3,7 @@ import { HeaderEvangeliste } from "@/components/Layouts/header/header-evangelist
 import { SidebarProvider } from "@/components/Layouts/sidebar/sidebar-context";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { InstallPWA } from "@/components/InstallPWA";
+import { PushNotifications } from "@/components/PushNotifications";
 import NextTopLoader from "nextjs-toploader";
 import type { PropsWithChildren } from "react";
 
@@ -21,6 +22,7 @@ export default function EvangelisteLayout({ children }: PropsWithChildren) {
         </div>
       </div>
       <InstallPWA />
+      <PushNotifications />
     </SidebarProvider>
   );
 }

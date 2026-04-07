@@ -119,6 +119,13 @@ export default async function AmesPage({ searchParams }: { searchParams: SearchP
         religions={religions}
         evangelistes={evangelistes}
         groupesFiltres={groupesFiltres}
+        programmes={programmes
+          .filter((p) => ames.some((a) => a.programmeId === p.id))
+          .map((p) => ({
+            id: p.id,
+            titre: p.titre,
+            date: new Date(p.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }),
+          }))}
         isAdmin={session.user.role === "ADMIN" || session.user.role === "SUPER_ADMIN"}
         stats={{
           total: totalAmes,

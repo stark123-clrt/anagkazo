@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { notifierAdmins } from "@/actions/push.actions";
 
 export interface RencontreData {
   personneNom: string;
@@ -64,6 +65,30 @@ export async function sauvegarderRencontre(
     revalidatePath("/evangeliste");
     revalidatePath("/evangeliste/terrain");
     revalidatePath("/");
+
+    // Notifications push aux admins
+    const evangeliste = await prisma.user.findUnique({ where: { id: evangelisteId }, select: { nom: true } });
+    const nom = evangeliste?.nom ?? "Un évangéliste";
+
+    if (data.priereSalut) {
+      notifierAdmins(organizationId, {
+        title: "🙏 Prière du salut !",
+        body: `${nom} a enregistré un salut — ${data.personneNom}`,
+        url: "/ames",
+      }).catch(() => {});
+    } else if (data.guerison) {
+      notifierAdmins(organizationId, {
+        title: "✨ Guérison enregistrée !",
+        body: `${nom} a enregistré une guérison — ${data.personneNom}`,
+        url: "/ames",
+      }).catch(() => {});
+    } else {
+      notifierAdmins(organizationId, {
+        title: "📋 Nouvelle rencontre",
+        body: `${nom} a enregistré une âme — ${data.personneNom}`,
+        url: "/ames",
+      }).catch(() => {});
+    }
 
     return { success: true };
   } catch {

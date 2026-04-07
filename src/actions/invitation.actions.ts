@@ -69,7 +69,7 @@ export async function activerCompte(
 
   const hashedPassword = await hash(motDePasse, 10);
 
-  await prisma.user.update({
+  const updated = await prisma.user.update({
     where: { id: user.id },
     data: {
       password: hashedPassword,
@@ -77,7 +77,16 @@ export async function activerCompte(
       invitationToken: null,
       invitationExpiry: null,
     },
+    select: { organizationId: true, nom: true },
   });
+
+  // Notifier les admins
+  const { notifierAdmins } = await import("@/actions/push.actions");
+  notifierAdmins(updated.organizationId, {
+    title: "👤 Nouvel évangéliste !",
+    body: `${updated.nom} vient d'activer son compte et a rejoint l'équipe`,
+    url: "/equipe",
+  }).catch(() => {});
 
   return { success: true, nom: user.nom, orgNom: user.organization.nom };
 }
