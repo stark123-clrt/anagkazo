@@ -10,8 +10,8 @@ import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Anagkazo",
-    default: "Anagkazo",
+    template: "%s | Walking by faith & love",
+    default: "Walking by faith & love",
   },
   description:
     "Tableau de bord d'évangélisation — suivi des sorties, âmes touchées, saluts et guérisons.",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Anagkazo",
+    title: "Walking by faith & love",
   },
   other: {
     "mobile-web-app-capable": "yes",

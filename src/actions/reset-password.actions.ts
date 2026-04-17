@@ -47,7 +47,7 @@ export async function demanderResetPassword(email: string): Promise<{
     await transporter.sendMail({
       from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
       to: emailNorm,
-      subject: "Réinitialisation de votre mot de passe — Anagkazo",
+      subject: "Réinitialisation de votre mot de passe — Walking by faith & love",
       html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"/></head>
@@ -57,7 +57,7 @@ export async function demanderResetPassword(email: string): Promise<{
       <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="background:#020D1A;padding:32px 40px;text-align:center;">
-            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Anagkazo</p>
+            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Walking by faith & love</p>
             <h1 style="margin:10px 0 0;color:#ffffff;font-size:20px;font-weight:700;">Réinitialisation du mot de passe</h1>
           </td>
         </tr>
@@ -77,7 +77,7 @@ export async function demanderResetPassword(email: string): Promise<{
               </tr>
             </table>
             <p style="color:#888;font-size:12px;">Ce lien expire dans 1 heure. Si vous n'avez pas fait cette demande, ignorez cet email.</p>
-            <p style="color:#888;font-size:12px;">Anagkazo</p>
+            <p style="color:#888;font-size:12px;">Walking by faith & love</p>
           </td>
         </tr>
       </table>

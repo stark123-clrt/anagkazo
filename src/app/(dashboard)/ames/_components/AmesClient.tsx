@@ -416,7 +416,7 @@ export default function AmesClient({
   <div class="header">
     <div>
       <h1>Annuaire des Âmes</h1>
-      <div class="sub">Anagkazo</div>
+      <div class="sub">Walking by faith & love</div>
     </div>
     <div class="date">Généré le ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</div>
   </div>

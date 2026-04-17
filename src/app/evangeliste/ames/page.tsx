@@ -55,6 +55,7 @@ export default async function AmesEvangelistePage() {
     aRecontacter: ames.filter((a) => !a.salut).length,
   };
 
+
   return (
     <>
       <Breadcrumb pageName="Mes Âmes Touchées" />

@@ -9,7 +9,7 @@ export function Logo() {
       <Image
         src={logoNoire}
         height={100}
-        alt="Anagkazo"
+        alt="walking by faith & love"
         className="dark:hidden"
         style={{ objectFit: "contain" }}
         priority
@@ -18,7 +18,7 @@ export function Logo() {
       <Image
         src={logoBlanc}
         height={100}
-        alt="Anagkazo"
+        alt="walking by faith & love"
         className="hidden dark:block"
         style={{ objectFit: "contain" }}
         priority
@@ -26,3 +26,4 @@ export function Logo() {
     </div>
   );
 }
+

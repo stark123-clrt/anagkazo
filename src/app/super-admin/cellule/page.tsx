@@ -7,7 +7,7 @@ export default async function CellulePage() {
   const organisations = await listerOrganisations();
   return (
     <>
-      <Breadcrumb pageName="Organisations FIJ" />
+      <Breadcrumb pageName="Organisations walking by faith & love" />
       <CelluleClient organisations={organisations} />
     </>
   );

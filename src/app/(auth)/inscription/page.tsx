@@ -67,8 +67,8 @@ export default function InscriptionPage() {
     setSuggestions([]);
     setShowSuggestions(false);
     setOrgExistante(null);
-    if (!form.groupe || form.groupe.startsWith("FIJ ")) {
-      setForm((prev) => ({ ...prev, groupe: `FIJ ${v.nom}` }));
+    if (!form.groupe || form.groupe.startsWith("walking by faith & love")) {
+      setForm((prev) => ({ ...prev, groupe: `walking by faith & love ${v.nom}` }));
     }
     verifierOrgExistante(v.nom).then((res) => {
       if (res.existe) setOrgExistante({ nom: res.nom!, nbAdmins: res.nbAdmins! });
@@ -169,7 +169,7 @@ export default function InscriptionPage() {
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#020D1A]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Link href="/accueil">
-            <Image src={logoBlanc} height={44} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
+            <Image src={logoBlanc} height={44} alt="Walking by faith & love" style={{ objectFit: "contain" }} priority />
           </Link>
           <div className="flex items-center gap-3">
             <Link href="/connexion" className="rounded-lg px-4 py-2 text-sm font-semibold text-white/70 transition hover:text-white">
@@ -322,11 +322,11 @@ export default function InscriptionPage() {
 
               <div>
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-white/40">
-                  Nom du groupe / FIJ
+                  Nom du groupe / walking by faith & love
                 </label>
                 <input
                   type="text"
-                  placeholder="ex : FIJ Paris Centre"
+                  placeholder="ex : walking by faith & love Châtelet"
                   value={form.groupe}
                   onChange={(e) => setForm({ ...form, groupe: e.target.value })}
                   onKeyDown={(e) => e.key === "Enter" && etapeValide[1] && suivant()}

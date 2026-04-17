@@ -20,7 +20,7 @@ async function envoyerMailVerification(email: string, nom: string, token: string
   await transporter.sendMail({
     from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
     to: email,
-    subject: "Confirmez votre adresse email — Anagkazo",
+    subject: "Confirmez votre adresse email — Walking by faith & love",
     html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"/></head>
@@ -30,7 +30,7 @@ async function envoyerMailVerification(email: string, nom: string, token: string
       <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
         <tr>
           <td style="background:#020D1A;padding:32px 40px;text-align:center;">
-            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Anagkazo</p>
+            <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Walking by faith & love</p>
             <h1 style="margin:10px 0 0;color:#ffffff;font-size:20px;font-weight:700;">Confirmez votre adresse email</h1>
           </td>
         </tr>
@@ -38,7 +38,7 @@ async function envoyerMailVerification(email: string, nom: string, token: string
           <td style="padding:36px 40px;">
             <p style="margin:0 0 16px;color:#1a1a2e;font-size:15px;">Bonjour <strong>${nom}</strong>,</p>
             <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
-              Votre espace Anagkazo a été créé avec succès. Pour activer votre compte et commencer à utiliser l'application, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
+              Votre espace Walking by faith & love a été créé avec succès. Pour activer votre compte et commencer à utiliser l'application, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
             </p>
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
@@ -50,7 +50,7 @@ async function envoyerMailVerification(email: string, nom: string, token: string
               </tr>
             </table>
             <p style="color:#888;font-size:12px;">Ce lien expire dans 24 heures. Si vous n'avez pas créé ce compte, ignorez cet email.</p>
-            <p style="color:#888;font-size:12px;">Anagkazo</p>
+            <p style="color:#888;font-size:12px;">Walking by faith & love</p>
           </td>
         </tr>
       </table>

@@ -44,7 +44,7 @@ export function InstallPWA() {
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-white">Installer Anagkazo</p>
+          <p className="text-sm font-bold text-white">Installer Walking by faith & love</p>
           <p className="text-xs text-white/50">Accès rapide depuis votre écran d&apos;accueil</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
@@ -68,3 +68,5 @@ export function InstallPWA() {
     </div>
   );
 }
+
+
