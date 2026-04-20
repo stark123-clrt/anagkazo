@@ -3,7 +3,9 @@
 import { useEffect } from "react";
 import { abonnerPush } from "@/actions/push.actions";
 
+
 export function PushNotifications() {
+
   useEffect(() => {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
