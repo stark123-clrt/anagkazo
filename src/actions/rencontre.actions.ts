@@ -6,19 +6,28 @@ import { revalidatePath } from "next/cache";
 import { notifierAdmins } from "@/actions/push.actions";
 
 export interface RencontreData {
+
   personneNom: string;
   personneVille: string;
+
   latitude?: number | null;
   longitude?: number | null;
   religion: string;
   priereSpontanee: boolean;
+
+
   guerison: boolean;
+
   priereSalut: boolean;
   besoinEglise: boolean;
   contact: string | null;
   programmeId?: string | null;
+
+
   // Noms de tous les évangélistes du groupe (soi inclus)
   groupeEquipe?: string[];
+
+
 }
 
 interface ActionResult {
@@ -60,7 +69,9 @@ export async function sauvegarderRencontre(
         organizationId,
         programmeId: data.programmeId ?? null,
       },
+      
     });
+  
 
     revalidatePath("/evangeliste");
     revalidatePath("/evangeliste/terrain");

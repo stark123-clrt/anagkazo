@@ -40,7 +40,7 @@ export async function getInvitation(token: string): Promise<{
     email: user.email,
     orgNom: user.organization.nom,
   };
-}
+
 
 export async function activerCompte(
   token: string,
