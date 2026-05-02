@@ -29,7 +29,7 @@ export default function VerifierEmailPage({ params }: { params: Promise<{ token:
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#020D1A]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Link href="/accueil">
-            <Image src={logoBlanc} height={44} alt="Walking by faith & love" style={{ objectFit: "contain" }} priority />
+            <Image src={logoBlanc} height={44} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
           </Link>
         </div>
       </nav>

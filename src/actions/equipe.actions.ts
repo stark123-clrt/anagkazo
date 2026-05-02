@@ -50,7 +50,7 @@ async function envoyerEmailInvitation(opts: {
           <!-- Header -->
           <tr>
             <td style="background:#020D1A;padding:32px 40px;text-align:center;">
-              <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Walking by faith & love</p>
+              <p style="margin:0;color:#5750F1;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Anagkazo</p>
               <h1 style="margin:10px 0 0;color:#ffffff;font-size:20px;font-weight:700;">Invitation à rejoindre l'équipe</h1>
             </td>
           </tr>
@@ -62,7 +62,7 @@ async function envoyerEmailInvitation(opts: {
 
               <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
                 <strong>${opts.nomAdmin}</strong> vous a invité à rejoindre l'équipe <strong>${opts.nomOrg}</strong>
-                sur la plateforme Walking by faith & love.
+                sur la plateforme Anagkazo.
               </p>
 
               <p style="margin:0 0 24px;color:#4a4a6a;font-size:14px;line-height:1.7;">
@@ -104,7 +104,7 @@ async function envoyerEmailInvitation(opts: {
           <tr>
             <td style="border-top:1px solid #eeeef5;padding:20px 40px;text-align:center;">
               <p style="margin:0;color:#9999bb;font-size:11px;line-height:1.6;">
-                Cet email vous a été envoyé par ${opts.nomOrg} via Walking by faith & love.<br/>
+                Cet email vous a été envoyé par ${opts.nomOrg} via Anagkazo.<br/>
                 Si vous n'attendiez pas cette invitation, ignorez simplement cet email.
               </p>
             </td>

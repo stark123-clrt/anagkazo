@@ -9,7 +9,7 @@ export default function AccueilPage() {
       {/* ===== NAVBAR ===== */}
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#020D1A]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Image src={logoBlanc} height={44} alt="Walking by faith & love" style={{ objectFit: "contain" }} priority />
+          <Image src={logoBlanc} height={44} alt="Anagkazo" style={{ objectFit: "contain" }} priority />
           <div className="flex items-center gap-3">
             <Link href="/connexion" className="rounded-lg px-4 py-2 text-sm font-semibold text-white/70 transition hover:text-white">
               Se connecter
@@ -36,7 +36,7 @@ export default function AccueilPage() {
           </h1>
 
           <p className="mx-auto mb-10 max-w-2xl text-base text-white/55 md:text-lg">
-            Walking by faith & love est l&apos;outil conçu pour les équipes d&apos;évangélisation — pour tracker les âmes touchées, saluts et guérisons en temps réel.
+            Anagkazo est l&apos;outil conçu pour les équipes d&apos;évangélisation — pour tracker les âmes touchées, saluts et guérisons en temps réel.
           </p>
 
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -134,7 +134,7 @@ export default function AccueilPage() {
         <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/[0.04] p-10 text-center">
           <h2 className="mb-4 text-3xl font-extrabold text-white">Prêt à impacter votre ville ?</h2>
           <p className="mb-8 text-sm text-white/50">
-            Rejoignez les équipes qui utilisent Walking by faith & love pour maximiser leur impact et ne perdre aucune âme de vue.
+            Rejoignez les équipes qui utilisent Anagkazo pour maximiser leur impact et ne perdre aucune âme de vue.
           </p>
           <Link
             href="/inscription"
@@ -147,7 +147,7 @@ export default function AccueilPage() {
 
       {/* ===== FOOTER ===== */}
       <footer className="border-t border-white/10 px-5 py-8 text-center text-sm text-white/25">
-        © 2026 Walking by faith & love · Tous droits réservés
+        © 2026 Anagkazo · Tous droits réservés
       </footer>
 
     </div>
